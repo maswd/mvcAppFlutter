@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mac_store_app_flutter/controllers/auth_controller.dart';
 import 'package:mac_store_app_flutter/views/screens/authentication/register_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthController _authController = AuthController();
+
+  late String email;
+
+  late String password;
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: Colors.grey.withOpacity(.1),
+        backgroundColor: Colors.white.withOpacity(.95),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Center(
@@ -47,6 +58,9 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     TextFormField(
+                      onChanged: (value) {
+                        email = value;
+                      },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "ایمیل را وارد کنید";
@@ -75,6 +89,9 @@ class LoginScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     TextFormField(
+                      onChanged: (value) {
+                        password = value;
+                      },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "رمز عبور را وارد کنید";
@@ -106,12 +123,13 @@ class LoginScreen extends StatelessWidget {
                       height: 20,
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          print("درست");
-                        } else {
-                          print("غلط");
-                        }
+                          await _authController.signInUsers(
+                              context: context,
+                              email: email,
+                              password: password);
+                        } 
                       },
                       child: Container(
                           width: 319,
