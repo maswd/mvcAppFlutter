@@ -20,6 +20,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late String fullName;
 
   late String password;
+  bool isloading = false;
+
+  registerUser() async {
+    setState(() {
+      isloading = true;
+    });
+    await _authController
+        .signUpUsers(
+            context: context,
+            email: email,
+            fullName: fullName,
+            password: password)
+        .whenComplete(() {
+      _formKey.currentState!.reset();
+      setState(() {
+        isloading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +55,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("ایجاد حساب کابری ",
+                    const Text("ایجاد حساب کابری ",
                         style: TextStyle(
                           color: Color(0xFF0f120E),
                           fontWeight: FontWeight.bold,
                           fontSize: 23,
                           letterSpacing: 0.2,
                         )),
-                    Text("برای کاوش در دنیای انحصاری",
+                    const Text("برای کاوش در دنیای انحصاری",
                         style: TextStyle(
                           color: Color(0xFF0f120E),
                           fontSize: 14,
@@ -54,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       width: 200,
                       height: 200,
                     ),
-                    Align(
+                    const Align(
                       alignment: Alignment.topRight,
                       child: Text(
                         "ایمیل",
@@ -81,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         labelText: "ایمیل خود را وارد کنید",
-                        labelStyle: TextStyle(fontSize: 14, letterSpacing: .1),
+                        labelStyle: const TextStyle(fontSize: 14, letterSpacing: .1),
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Image.asset(
@@ -92,8 +111,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Align(
+                    const SizedBox(height: 20),
+                    const Align(
                       alignment: Alignment.topRight,
                       child: Text(
                         "نام و نام خانوادگی",
@@ -120,7 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         labelText: " نام و نام خانوادگی خود را وارد کنید ",
-                        labelStyle: TextStyle(fontSize: 14, letterSpacing: .1),
+                        labelStyle: const TextStyle(fontSize: 14, letterSpacing: .1),
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Image.asset(
@@ -131,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     TextFormField(
                       onChanged: (value) {
                         password = value;
@@ -150,8 +169,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           enabledBorder: InputBorder.none,
                           labelText: "رمز خود را وارد کنید",
                           labelStyle:
-                              TextStyle(fontSize: 14, letterSpacing: .1),
-                          suffixIcon: Icon(Icons.visibility),
+                              const TextStyle(fontSize: 14, letterSpacing: .1),
+                          suffixIcon: const Icon(Icons.visibility),
                           prefixIcon: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Image.asset(
@@ -163,17 +182,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(9))),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     InkWell(
-                      onTap: () async {
+                      onTap: (){
                         if (_formKey.currentState!.validate()) {
-                          await _authController.signUpUsers(
-                              context: context,
-                              email: email,
-                              fullName: fullName,
-                              password: password);
+                          registerUser();
                         }
                       },
                       child: Container(
@@ -181,7 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: 50,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              gradient: LinearGradient(colors: [
+                              gradient: const LinearGradient(colors: [
                                 Color(0xCC0D6EFF),
                                 Color(0xFF102DE1),
                               ])),
@@ -201,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               BorderRadius.circular(30),
                                           border: Border.all(
                                               width: 12,
-                                              color: Color(0xFF1030DE5))),
+                                              color: const Color(0xFF1030DE5))),
                                     ),
                                   )),
                               Positioned(
@@ -235,21 +250,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               Center(
-                                  child: Text(
-                                "ثبت نام",
-                                style: TextStyle(
-                                    fontSize: 17, color: Colors.white),
-                              )),
+                                  child: isloading
+                                      ? const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                      : const Text(
+                                          "ثبت نام",
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              color: Colors.white),
+                                        )),
                             ],
                           )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "حساب کاربری دارید ؟",
                           style: TextStyle(
                               fontWeight: FontWeight.w500, letterSpacing: .5),
@@ -261,7 +281,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               return LoginScreen();
                             }));
                           },
-                          child: Text("ورود به حساب ",
+                          child: const Text("ورود به حساب ",
                               style: TextStyle(
                                   color: Color(0xFF103DE5),
                                   fontWeight: FontWeight.bold)),

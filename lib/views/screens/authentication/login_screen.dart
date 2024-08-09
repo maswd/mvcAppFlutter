@@ -15,6 +15,21 @@ class _LoginScreenState extends State<LoginScreen> {
   late String email;
 
   late String password;
+  bool isLoading = false;
+
+  loginUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    await _authController
+        .signInUsers(context: context, email: email, password: password)
+        .whenComplete(() {
+      _formKey.currentState!.reset();
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +46,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("ورود به حساب کاربری",
+                    const Text("ورود به حساب کاربری",
                         style: TextStyle(
                           color: Color(0xFF0f120E),
                           fontWeight: FontWeight.bold,
                           fontSize: 23,
                           letterSpacing: 0.2,
                         )),
-                    Text("برای کاوش در دنیای انحصاری",
+                    const Text("برای کاوش در دنیای انحصاری",
                         style: TextStyle(
                           color: Color(0xFF0f120E),
                           fontSize: 14,
@@ -49,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 200,
                       height: 200,
                     ),
-                    Align(
+                    const Align(
                       alignment: Alignment.topRight,
                       child: Text(
                         "ایمیل",
@@ -76,7 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         labelText: "ایمیل خود را وارد کنید",
-                        labelStyle: TextStyle(fontSize: 14, letterSpacing: .1),
+                        labelStyle:
+                            const TextStyle(fontSize: 14, letterSpacing: .1),
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Image.asset(
@@ -87,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     TextFormField(
                       onChanged: (value) {
                         password = value;
@@ -106,8 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           enabledBorder: InputBorder.none,
                           labelText: "رمز خود را وارد کنید",
                           labelStyle:
-                              TextStyle(fontSize: 14, letterSpacing: .1),
-                          suffixIcon: Icon(Icons.visibility),
+                              const TextStyle(fontSize: 14, letterSpacing: .1),
+                          suffixIcon: const Icon(Icons.visibility),
                           prefixIcon: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Image.asset(
@@ -119,24 +135,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(9))),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     InkWell(
-                      onTap: () async {
+                      onTap: () {
                         if (_formKey.currentState!.validate()) {
-                          await _authController.signInUsers(
-                              context: context,
-                              email: email,
-                              password: password);
-                        } 
+                          loginUser();
+                        }
                       },
                       child: Container(
                           width: 319,
                           height: 50,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              gradient: LinearGradient(colors: [
+                              gradient: const LinearGradient(colors: [
                                 Color(0xCC0D6EFF),
                                 Color(0xFF102DE1),
                               ])),
@@ -156,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                           border: Border.all(
                                               width: 12,
-                                              color: Color(0xFF1030DE5))),
+                                              color: const Color(0xFF1030DE5))),
                                     ),
                                   )),
                               Positioned(
@@ -190,21 +203,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               Center(
-                                  child: Text(
-                                "ورود به حساب",
-                                style: TextStyle(
-                                    fontSize: 17, color: Colors.white),
-                              )),
+                                  child: isLoading
+                                      ? const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                      : const Text(
+                                          "ورود به حساب",
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              color: Colors.white),
+                                        )),
                             ],
                           )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           " کاربر جدید هستید؟ ",
                           style: TextStyle(
                               fontWeight: FontWeight.w500, letterSpacing: .5),
@@ -216,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return RegisterScreen();
                             }));
                           },
-                          child: Text("ثبت نام",
+                          child: const Text("ثبت نام",
                               style: TextStyle(
                                   color: Color(0xFF103DE5),
                                   fontWeight: FontWeight.bold)),
